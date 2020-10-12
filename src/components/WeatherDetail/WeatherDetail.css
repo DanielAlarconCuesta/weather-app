@@ -1,0 +1,9 @@
+.weatherDetailContainer {
+    margin-top: 3rem !important;
+    margin-left: 5rem !important;
+    margin-right: 5rem !important;
+}
+
+a {
+    cursor: pointer;
+}
