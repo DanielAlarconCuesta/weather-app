@@ -1,7 +1,27 @@
 .searcher-bar {
     display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+@media screen and (max-width: 992px) {
+  .logoDiv {
+      margin-top: 1rem !important;
+      display: flex !important;
+      justify-content: center !important;
+  }
+
+  .navbarDiv {
+      margin-top: 1rem !important;
+  }
+}
+
+@media screen and (min-width: 992px) {
+
+  header {
+      margin-top: 1rem !important;
+      margin-bottom: 3rem !important;
+  }
 }

@@ -1,9 +1,157 @@
 .weatherDetailContainer {
-    margin-top: 3rem !important;
-    margin-left: 5rem !important;
-    margin-right: 5rem !important;
+    padding-right: 15px !important;
+    padding-left: 15px !important;
 }
 
 a {
-    cursor: pointer;
+    cursor: pointer !important;
+}
+
+.headerFlagImg {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.headerFlag {
+    width: 100% !important;
+    justify-content: center !important;
+    display: flex !important;
+    margin-top: 2rem !important;
+}
+
+.countryInfo {
+    text-align: center !important;
+    margin-top: 2rem !important;
+}
+
+.degreesDiv {
+    background-color: lightseagreen !important;
+    width: 50% !important;
+    height: 100px !important;
+    margin-top: 3rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.IconAndSwitcherDiv {
+    position: absolute !important;
+    left: 1.5rem !important;
+    font-size: 17px !important;
+    height: 100% !important;
+    width: 29% !important;
+    margin-top: 0.5rem !important;
+}
+
+.switcherDiv {
+    position: relative !important;
+    z-index: 1 !important;
+    margin-top: 2px !important;
+}
+
+.weatherIconDiv {
+    position: absolute !important;
+    top: 0px !important;  
+    left: 10px !important;
+    display: flex !important;
+    width: 100px !important;
+    height: 100% !important;
+}
+
+.weatherIconImg {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.temperatureAndDescriptionDiv {    
+    position: absolute !important;
+    top: 0.5rem !important;
+    right: 1.5rem !important;
+    width: 50% !important;
+    font-size: 25px !important;
+    color: white !important;
+    font-weight: bold !important;
+    text-align: right !important;
+}
+
+.weatherTableDiv {
+    margin-top: 4rem !important;
+}
+
+.weatherDetailsValues {
+    direction: rtl !important;
+    text-align: end !important;
+    padding-left: 5rem !important;
+}
+
+.weatherSecondaryTable {
+    margin-top: 4rem;
+}
+
+.noLocationProvided {
+    margin-top: 1rem !important;
+}
+
+@media screen and (max-width: 768px) {
+    
+    .headerFlagImg {
+        width: 50% !important;
+    }
+
+    .countryInfo {
+        margin-top: 0.5rem !important;
+    }
+
+    .degreesDiv {
+        width: 100% !important;
+        margin-top: 1rem !important;
+    }
+
+    .IconAndSwitcherDiv {
+        left: 1rem !important;
+        margin-top: 0rem !important;
+        
+    }
+
+    .temperatureAndDescriptionDiv {
+        right: 1rem !important;
+        font-size: 19px !important;    
+    }
+    
+    .weatherTableDiv {
+        margin-top: 2rem !important;
+    }
+
+    .weatherDetailsValues {
+        text-align: start !important;
+        padding-right: 3rem !important;
+    }
+
+    .weatherSecondaryTable {
+        margin-top: 2rem !important;
+    }
+
+  }
+
+@media screen and (min-width: 768px) {
+    .headerFlag {
+        height: 130px !important;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .headerFlag {
+        height: 200px !important;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .headerFlagImg {
+        width: 80% !important;
+    }
+
+    body {
+        margin-bottom: 6rem !important;
+    }
 }

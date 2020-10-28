@@ -1,9 +1,8 @@
 import { isNull, handleError } from '../../Utils/utils.js';
-import { dublin } from './mockWeather.js';
+//import { dublin } from './mockWeather.js';
 
 export default class OpenWeatherService {
     constructor() {
-        //password: TestingOpenweathermap
         const API_KEY = "5f974566cd22a48de212a98c614a8bdd";
 
         this.host = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}`;
@@ -99,14 +98,12 @@ export default class OpenWeatherService {
                 if (!isWeatherFound) {
                     return error;
                 }
-                
+
                 return weather;
             }
             default: {
                 return error;
             }
         }
-
-
     }
 }

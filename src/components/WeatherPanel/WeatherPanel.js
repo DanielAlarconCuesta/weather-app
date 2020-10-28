@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './WeatherPanel.css';
-import logo from './logo.png';
 
-import Searcher from '../Searcher/Searcher';
-import WeatherDetail from '../WeatherDetail/WeatherDetail';
+import Searcher from '../Searcher/Searcher.js';
+import WeatherDetail from '../WeatherDetail/WeatherDetail.js';
 
-//password: TestingOpenweathermap
+import history from '../../history.js';
+
 const API_KEY = "5f974566cd22a48de212a98c614a8bdd";
 
 export default class WeatherPanel extends Component {
@@ -16,28 +16,54 @@ export default class WeatherPanel extends Component {
         this.state = {
             search: '',
             coordinates: null,
-            city: null
+            city: null,
+            units: "metric",
+            unitsSymbol: "ºC"
         };
 
         this.handdleSearcherOnChange = this.handdleSearcherOnChange.bind(this);
+        this.handleClickMetric = this.handleClickMetric.bind(this);
+        this.handleClickImperial = this.handleClickImperial.bind(this);
 
         this.renderSearcher = this.renderSearcher.bind(this);
         this.renderDetailedWeather = this.renderDetailedWeather.bind(this);
+        this.resetComponent= this.resetComponent.bind(this);
     }
 
     componentDidMount() {
-        if (navigator.geolocation) {
+        const { cityName } = this.props.match && this.props.match.params ? this.props.match.params : {};
+       
+        if (typeof(cityName) == "string") {
+            history.push(`/city/${cityName}`);
+            this.state.city = cityName;
 
-            let successFunction = (position) => {
-                this.setState({
-                    coordinates: {
-                        lat: position.coords.latitude,
-                        lon: position.coords.longitude
-                    }
-                });
+        } else {
+            history.push(`/home`);
+            if (navigator.geolocation) {
+
+                let successFunction = (position) => {
+                    this.setState({
+                        coordinates: {
+                            lat: position.coords.latitude,
+                            lon: position.coords.longitude
+                        }
+                    });
+                }
+
+                navigator.geolocation.getCurrentPosition(successFunction);
             }
+        }
+    }
 
-            navigator.geolocation.getCurrentPosition(successFunction);
+    componentDidUpdate(prevProps, prevState) {
+
+        if (prevState.city != this.state.city) {
+            if (this.state.city == null) {
+                history.push(`/home/`);
+            
+            } else {
+                history.push(`/city/${this.state.city}`);
+            }
         }
     }
 
@@ -54,43 +80,53 @@ export default class WeatherPanel extends Component {
         }, 500);
     }
 
+    handleClickMetric() {
+        if (this.state.units !== "metric") {
+            this.setState({units: "metric", unitsSymbol: 'ºC'});
+        }
+    }
+
+    handleClickImperial() {
+        if (this.state.units !== "imperial") {
+            this.setState({units: "imperial", unitsSymbol: 'ºF'});
+        }
+    }
+
+    resetComponent() {
+        this.setState({
+            search: '',
+            city: null,
+        });
+    }
+
     renderSearcher() {
 
         let { search } = this.state;
         let handdleSearcherOnChange = this.handdleSearcherOnChange;
+        let resetComponent = this.resetComponent;
         
         return (
-            <header className="row">
-                <div className="col-sm-2 col-md-2 col-lg-4 col-xl-4">
-                    <div className="header-logo">
-                        <img 
-                            className="responsive" 
-                            src={logo} 
-                            alt="logo" 
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-10 col-md-10 col-lg-8 col-xl-8">
-                    <Searcher 
-                        onChange={handdleSearcherOnChange} 
-                        value={search}
-                    />
-                </div>
-            </header>
+            <Searcher
+                resetComponent={this.resetComponent}
+                onChange={handdleSearcherOnChange} 
+                value={search}
+            />
         )
     }
 
     renderDetailedWeather() {
-        
-        let { city, coordinates } = this.state;
+        let { city, coordinates, unitsSymbol, units } = this.state;
 
         if (city) {
+
             return (
-                
                 <WeatherDetail 
                     key = "city"
                     city = {city}
+                    handleClickMetric = {this.handleClickMetric}
+                    handleClickImperial = {this.handleClickImperial}
+                    unitsSymbol = {unitsSymbol}
+                    units = {units}
                 />
             )
         } else if (coordinates 
@@ -102,6 +138,10 @@ export default class WeatherPanel extends Component {
                     key = "coordinates"
                     lat = {coordinates.lat}
                     lon = {coordinates.lon}
+                    handleClickMetric = {this.handleClickMetric}
+                    handleClickImperial = {this.handleClickImperial}
+                    unitsSymbol = {unitsSymbol}
+                    units = {units}
                 />
             )
         } else {
