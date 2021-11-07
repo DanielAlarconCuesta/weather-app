@@ -1,4 +1,4 @@
-import { isNull, handleError } from '../../Utils/utils.js';
+import { isNull, handleError } from '../../utils/utils.js';
 //import { dublin } from './mockWeather.js';
 
 export default class OpenWeatherService {

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import CountryService from '../../Services/Country/CountryService.js';
-import OpenWeatherService from '../../Services/OpenWeather/OpenWeatherService.js';
-import { getFormattedTime } from '../../Utils/utils.js';
+import CountryService from '../../services/Country/CountryService';
+import OpenWeatherService from '../../services/OpenWeather/OpenWeatherService.js';
 
+import { getFormattedTime } from '../../utils/utils.js';
 
 import './WeatherDetail.css';
 import '../../index.css';
@@ -33,7 +33,7 @@ export default class WeatherDetail extends Component {
         super(...props);
 
         this.state = {
-            location: null,
+            country: null,
             weather: null,
             secondaryTableActive: 'time'
         }
@@ -102,17 +102,15 @@ export default class WeatherDetail extends Component {
 
     async getCountryByCode(code) {
         
-        let location = await this.countryService.getCountryByCode(code);
+        let country = await this.countryService.getCountryByCode(code);
          
-        if (location instanceof Error) {
-            console.error(location.message);
-
-        } else {
-            console.log(location);
-            this.setState({location: location});
+        if (country instanceof Error) {
+            console.error(country.message);
+            return;
         }
 
-    
+        console.log(country);
+        this.setState({country: country});
     }
 
     renderNoLocationProvided() {
@@ -125,7 +123,7 @@ export default class WeatherDetail extends Component {
 
     renderWeatherDetail() {
 
-        const { location, weather, secondaryTableActive } = this.state;
+        const { country, weather, secondaryTableActive } = this.state;
         const { handleClickMetric, handleClickImperial, unitsSymbol, units } = this.props;
 
         return (
@@ -135,35 +133,18 @@ export default class WeatherDetail extends Component {
                     <div className="col-sm-12 col-md-4 col-lg-5 col-xl-5 headerFlag">
                         <img
                             className="headerFlagImg" 
-                            src = {
-                                location && location.flag 
-                                ? location.flag 
-                                : "/img/imageNotFound.png" 
-                            } 
-                            alt = {
-                                (location && location.demonym 
-                                    ? location.demonym 
-                                    : "country"
-                                ) + " flag"
-                            }
+                            src = {country && country.flag ? country.flag : "/img/imageNotFound.png"} 
+                            alt = "Flag"
                         />
                     </div>
 
                     <div className="col-sm-12 col-md-8 col-lg-7 col-xl-7 countryInfo">
                         <h2>
                             {weather.name}
-                            {
-                                location && location.name 
-                                ? ` - ${location.name}` 
-                                : ''
-                            } 
+                            {country && country.name ? ` - ${country.name}` : ''} 
                         </h2> 
                         <h4>
-                            {
-                                location && location.nativeName 
-                                ? `(${location.nativeName})` 
-                                : "" 
-                            }
+                            {country && country.nativeName ? `(${country.nativeName})` : ""}
                         </h4>
                     </div>
 

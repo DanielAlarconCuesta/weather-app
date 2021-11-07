@@ -1,59 +1,66 @@
-import { isNull } from '../../Utils/utils.js';
-//import { america } from './mockCountries.js';
+import { isNull } from '../../utils/utils.js';
+
+import RestCountry from './apis/restcountries/v3.1/RestCountry';
+import * as RestCountriesParser from './apis/restcountries/v3.1/Parser';
+import * as RestCountriesEnvironment from './apis/restcountries/v3.1/Environment';
+//import { america } from './apis/restcountries/v3.1/mockRestCountries';
+
 export default class CountryService {
 
     constructor() {
-        this.host = 'https://restcountries.eu/rest/v2';
-        this.countryCodePath = '/alpha/';
+        this.host = RestCountriesEnvironment.HOST;
+        this.countryCodePath = RestCountriesEnvironment.COUNTRY_CODE_PATH;
     }
 
-
-    async getCountryByCode(args) {
+    async getCountryByCode(data = {}) {
         //return america;
-        
-        let error = Error("No country code specified");
-        let { code } = args || {};
+        let error = Error("No country code specified"),
+            { code } = data;
         
         if (isNull(code)) {
             return error;
         }
 
-        let url = this.host + this.countryCodePath + code;
-        let country, status; 
-        
-        await fetch(url)
-             .then(response => {
-                 status = response.ok;
-                 return response.json()
-                 
-            }).then(response => country = response)
-            .catch(error => status = error.ok);
+        let ok = false,
+            url = `${this.host}${this.countryCodePath}${code}`,
+            response = await fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        ok = response.ok; 
+                        return response.json();
+                    }
 
-        return this.handleResponseGetCountry({status, country});
-        
-    }
-
-    handleResponseGetCountry(args) {
-        let error = Error("Country info can not be reached at the moment");
-        let { status, country } = args || {};
-
-        if (isNull(status) || isNull(country)) {
-            return error;
-        }
-
-        switch (status) {
-            case true:
+                    return response;
                 
-                if (!country.hasOwnProperty("alpha2Code")) {
-                    return error;
-                }
+                }).catch(error => error)
 
-                return country;
-                break;
-
-            default:
-                return error;
-                break;
+        
+        if (!ok || !response) {
+            return this.handleErrorGetCountry(response);
         }
+        
+        return this.handleResponseGetCountry(response);
+        
     }
+    
+    handleResponseGetCountry(data) {
+
+        try {
+
+            if (isNull(data) || data.length == 0) {
+                return this.handleErrorGetCountry();
+            }
+            
+            return RestCountriesParser.restCountryToCountry(new RestCountry(data[0]));
+
+        } catch(exception) {
+            return this.handleErrorGetCountry();
+        }
+
+    }
+
+    handleErrorGetCountry(error) {
+        return Error("Country info can not be reached at the moment");
+    }
+    
 }
